@@ -12,6 +12,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -54,8 +55,10 @@ export function SignInForm() {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle>Créer un compte</CardTitle>
-        <CardDescription>Rejoignez la communauté SkillSwap</CardDescription>
+        <CardTitle>Se connecter</CardTitle>
+        <CardDescription>
+          Connectez-vous a votre compte SkillSwap
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -90,6 +93,18 @@ export function SignInForm() {
           </Button>
         </form>
       </CardContent>
+
+      <CardFooter>
+        <p className="text-sm text-muted-foreground">
+          Pas encore de compte ?{" "}
+          <a
+            href="/auth/sign-up"
+            className="underline underline-offset-4 hover:text-primary"
+          >
+            S&apos;inscrire
+          </a>
+        </p>
+      </CardFooter>
     </Card>
   );
 }

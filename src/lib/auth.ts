@@ -11,5 +11,13 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  user: {
+    additionalFields: {
+      tokenBalance: {
+        type: "number",
+        defaultValue: 3,
+      },
+    },
+  },
   plugins: [nextCookies()],
 });

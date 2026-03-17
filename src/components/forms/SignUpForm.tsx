@@ -12,6 +12,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -102,6 +103,18 @@ export function SignUpForm() {
           </Button>
         </form>
       </CardContent>
+
+      <CardFooter>
+        <p className="text-sm text-muted-foreground">
+          Vous avez deja un compte ?{" "}
+          <a
+            href="/auth/sign-in"
+            className="underline underline-offset-4 hover:text-primary"
+          >
+            Se connecter
+          </a>
+        </p>
+      </CardFooter>
     </Card>
   );
 }
