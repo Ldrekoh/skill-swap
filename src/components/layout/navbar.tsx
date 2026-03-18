@@ -11,10 +11,11 @@ import {
 import { getCurrentUser } from "@/server/Users";
 import { Coins, LayoutDashboard, User } from "lucide-react";
 import Link from "next/link";
-import { SignOutButton } from "./sign-out-button"; // On va le modifier légèrement
+import { SignOutButton } from "./sign-out-button";
 
 export async function Navbar() {
-  const currentUser = await getCurrentUser();
+  // On cast en 'any' ou ton type User personnalisé pour éviter l'erreur sur tokenBalance
+  const currentUser = (await getCurrentUser()) as any;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
@@ -48,7 +49,7 @@ export async function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="relative h-9 w-9 rounded-full border"
+                    className="relative h-9 w-9 rounded-full border focus-visible:ring-0 focus-visible:ring-offset-0"
                   >
                     <Avatar className="h-8 w-8">
                       <AvatarImage
@@ -74,19 +75,25 @@ export async function Navbar() {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/dashboard" className="cursor-pointer">
+                    <Link
+                      href="/dashboard"
+                      className="cursor-pointer w-full flex items-center"
+                    >
                       <LayoutDashboard className="mr-2 h-4 w-4" />
                       <span>Tableau de bord</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/profile" className="cursor-pointer">
+                    <Link
+                      href="/profile"
+                      className="cursor-pointer w-full flex items-center"
+                    >
                       <User className="mr-2 h-4 w-4" />
                       <span>Profil</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  {/* On passe le bouton logout ici */}
+                  {/* Utilise le composant client pour la déconnexion */}
                   <SignOutButton />
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -99,7 +106,7 @@ export async function Navbar() {
                 </Button>
               </Link>
               <Link href="/auth/sign-up">
-                <Button size="sm">S inscrire</Button>
+                <Button size="sm">S'inscrire</Button>
               </Link>
             </div>
           )}

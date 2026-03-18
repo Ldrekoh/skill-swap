@@ -7,16 +7,22 @@ export async function proxy(request: NextRequest) {
     headers: await headers(),
   });
 
-  // THIS IS NOT SECURE!
-  // This is the recommended approach to optimistically redirect users
-  // We recommend handling auth checks in each page/route
-  if (!session) {
+  const { pathname } = request.nextUrl;
+
+  // 1. Si l'utilisateur est connecté et essaie d'aller sur les pages d'auth
+  if (session && pathname.startsWith("/auth")) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  // 2. Si l'utilisateur n'est PAS connecté et essaie d'aller sur le dashboard
+  if (!session && pathname.startsWith("/dashboard")) {
     return NextResponse.redirect(new URL("/auth/sign-in", request.url));
   }
 
   return NextResponse.next();
 }
 
+// On met à jour le matcher pour inclure l'auth et le dashboard
 export const config = {
-  matcher: ["/dashboard"],
+  matcher: ["/dashboard/:path*", "/auth/:path*"],
 };
