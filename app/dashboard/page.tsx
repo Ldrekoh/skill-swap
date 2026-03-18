@@ -9,7 +9,8 @@ import {
 } from "@/components/ui/card";
 import { getMyOffers } from "@/server/Offers";
 import { getCurrentUser } from "@/server/Users";
-import { ArrowUpRight, Coins, LayoutGrid, Star } from "lucide-react";
+import { ChevronRight, Coins, LayoutGrid, Star } from "lucide-react";
+import Link from "next/link";
 import { CreateOfferDialog } from "./CreateOfferDialog";
 
 export default async function DashboardPage() {
@@ -124,13 +125,12 @@ export default async function DashboardPage() {
                   <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest italic">
                     Publié le {new Date(offer.createdAt).toLocaleDateString()}
                   </span>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="h-8 gap-2 group-hover:bg-primary group-hover:text-white transition-all"
+                  <Link
+                    href={`/dashboard/offers/${offer.id}`}
+                    className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors w-fit"
                   >
-                    Détails <ArrowUpRight className="size-3" />
-                  </Button>
+                    <ChevronRight className="size-4" /> Voir l'offre
+                  </Link>
                 </div>
               </Card>
             ))}

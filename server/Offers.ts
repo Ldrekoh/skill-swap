@@ -13,7 +13,7 @@ export const createOffer = async (
   price: number,
 ) => {
   try {
-    const currentUser = await getCurrentUser(); // Appel INTERNE
+    const currentUser = await getCurrentUser();
     if (!currentUser?.user?.id) {
       return { success: false, message: "Vous devez être connecté" };
     }
@@ -31,6 +31,50 @@ export const createOffer = async (
   } catch (error) {
     const e = error as Error;
     return { success: false, message: e.message };
+  }
+};
+
+export const updateOffer = async (
+  id: string, // Ajout de l'ID de l'offre à modifier
+  title: string,
+  description: string,
+  category: string,
+  price: number,
+) => {
+  try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser?.user?.id) {
+      return { success: false, message: "Vous devez être connecté" };
+    }
+
+    await db
+      .update(skillOffers)
+      .set({
+        title,
+        description,
+        category,
+        price,
+      })
+      .where(
+        and(
+          eq(skillOffers.id, id),
+          eq(skillOffers.authorId, currentUser.user.id),
+        ),
+      );
+
+    // On rafraîchit les pages concernées
+    revalidatePath("/dashboard");
+    revalidatePath(`/dashboard/offers/${id}`);
+
+    return { success: true, message: "Offre mise à jour avec succès !" };
+  } catch (error) {
+    console.error("Erreur updateOffer:", error);
+    const e = error as Error;
+    return {
+      success: false,
+      message: e.message,
+    };
   }
 };
 
@@ -57,7 +101,18 @@ export const getOffers = async () => {
   }
 };
 
-export const getMyOfferById = async (id: number) => {
+export const getOfferById = async (id: string) => {
+  try {
+    const offer = await db.query.skillOffers.findFirst({
+      where: eq(skillOffers.id, id),
+    });
+    return { success: true, offer };
+  } catch (error) {
+    return { success: false, offer: null };
+  }
+};
+
+export const getMyOfferById = async (id: string) => {
   try {
     const currentUser = await getCurrentUser();
 
@@ -80,7 +135,7 @@ export const getMyOfferById = async (id: number) => {
   }
 };
 
-export const deleteOffer = async (id: number) => {
+export const deleteOffer = async (id: string) => {
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser?.user?.id)
@@ -100,6 +155,7 @@ export const deleteOffer = async (id: number) => {
     revalidatePath("/dashboard");
     return { success: true, message: "Offre supprimée avec succès !" };
   } catch (error) {
-    return { success: false, message: "Erreur de suppression" };
+    const e = error as Error;
+    return { success: false, message: e.message };
   }
 };

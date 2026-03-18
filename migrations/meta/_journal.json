@@ -8,6 +8,13 @@
       "when": 1773757898846,
       "tag": "0000_massive_the_liberteens",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1773840071481,
+      "tag": "0001_boring_magus",
+      "breakpoints": true
     }
   ]
 }

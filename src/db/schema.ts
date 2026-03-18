@@ -115,6 +115,25 @@ export const skillOffers = pgTable("skill_offers", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const bookings = pgTable("bookings", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  offerId: uuid("offer_id").references(() => skillOffers.id, {
+    onDelete: "set null",
+  }), // 'set null' est mieux pour garder l'historique si l'offre est supprimée
+  buyerId: text("buyer_id")
+    .notNull()
+    .references(() => user.id),
+  sellerId: text("seller_id")
+    .notNull()
+    .references(() => user.id),
+
+  // ON RECOPIE LE PRIX ICI :
+  priceAtPurchase: integer("price_at_purchase").notNull(),
+
+  status: text("status").default("completed").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const skillOffersRelations = relations(skillOffers, ({ one }) => ({
   author: one(user, {
     fields: [skillOffers.authorId],
@@ -134,4 +153,5 @@ export const schema = {
   account,
   verification,
   skillOffers,
+  bookings,
 };
